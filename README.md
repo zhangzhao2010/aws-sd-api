@@ -16,3 +16,5 @@ webui.sh --listen --share --api
 ```
 
 ## 4. Call API with python script
+### change url
+python invoke_sd_api.py 
