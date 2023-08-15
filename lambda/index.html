@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>图片生成</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #image-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        img {
+            /* width: 200px;
+            height: 150px; */
+            object-fit: cover;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-3">图片生成</h1>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <textarea id="text-input-prompt" class="form-control" placeholder="输入prompt"></textarea>
+            </div>
+            <div class="col-md-6">
+                <textarea id="text-input-negative-prompt" class="form-control" placeholder="输入negative prompt"></textarea>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button id="submit-button" class="btn btn-primary">提交</button>
+        </div>
+        <div id="image-container" class="mt-4"></div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#submit-button').click(function() {
+                var prompt = $('#text-input-prompt').val();
+                var negative_prompt = $('#text-input-negative-prompt').val();
+                // if (prompt.trim() === '' && negative_prompt.trim() === '') {
+                //     alert('请输入文字后再提交！');
+                //     return;
+                // }
+
+                $.ajax({
+                    url: 'YOUR_APIGATEWAY_ENDPOINT',
+                    method: 'POST',
+                    data: JSON.stringify({ prompt: prompt, negative_prompt: negative_prompt }),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        console.log(data);
+                        displayImages(data.images);
+                    },
+                    error: function() {
+                        alert('请求后端API失败，请稍后重试！');
+                    }
+                });
+            });
+
+            function displayImages(images) {
+                var imageContainer = $('#image-container');
+                imageContainer.empty();
+                images.forEach(function(imageUrl) {
+                    var imgElement = $('<img>').attr('src', imageUrl);
+                    imageContainer.append(imgElement);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
